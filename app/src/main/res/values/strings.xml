@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">MyGithubUser</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+
+    <string name="search">Search</string>
+    <string name="hint">Search Github</string>
+
+    <string name="label_home">Home</string>
+    <string name="label_detail_user">Detail User</string>
+
+    <string name="followers">%d Followers</string>
+    <string name="following">%d Following</string>
+    <string name="company">Company</string>
+    <string name="location">Location</string>
+
+    <string name="tabs">tabs</string>
 </resources>
