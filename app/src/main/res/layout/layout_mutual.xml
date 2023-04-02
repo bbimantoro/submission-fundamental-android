@@ -10,29 +10,16 @@
         android:layout_width="@dimen/width_and_height_size"
         android:layout_height="wrap_content"
         android:contentDescription="@string/tabs"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="@dimen/width_and_height_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/width_and_height_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabs" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/circularProgressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

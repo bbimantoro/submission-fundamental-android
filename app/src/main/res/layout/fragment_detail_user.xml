@@ -8,129 +8,118 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="@dimen/image_size"
-        android:layout_height="@dimen/image_size"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_width="@dimen/image_size_normal"
+        android:layout_height="@dimen/image_size_normal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_mutual"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="@dimen/width_and_height_size"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_normal"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size"
-        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
         tools:text="@string/name" />
 
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="@dimen/width_and_height_size"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintEnd_toEndOf="@+id/tv_name"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_name"
         tools:text="@string/username" />
 
     <TextView
-        android:id="@+id/tv_company"
-        android:layout_width="@dimen/width_and_height_size"
+        android:id="@+id/tv_followers"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:drawablePadding="@dimen/drawable_padding_size"
-        app:drawableStartCompat="@drawable/business_24"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        tools:text="@string/company" />
-
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="@dimen/width_and_height_size"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:drawablePadding="@dimen/drawable_padding_size"
-        app:drawableStartCompat="@drawable/location_on_24"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintEnd_toStartOf="@+id/tv_following"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4"
-        tools:text="@string/location" />
-
-    <TextView
-        android:id="@+id/tv_followers"
-        android:layout_width="@dimen/width_and_height_size"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:drawablePadding="@dimen/drawable_padding_size"
-        app:drawableStartCompat="@drawable/person_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5"
         tools:text="@string/followers" />
 
     <TextView
         android:id="@+id/tv_following"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_followers"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/tv_followers"
-        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
         tools:text="@string/following" />
 
+    <TextView
+        android:id="@+id/followers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/followers"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintEnd_toStartOf="@+id/following"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_followers" />
+
+    <TextView
+        android:id="@+id/following"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/following"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/followers"
+        app:layout_constraintTop_toBottomOf="@+id/tv_following" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/include"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <include
+        android:id="@+id/include"
         layout="@layout/layout_mutual"
         android:layout_width="@dimen/width_and_height_size"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_mutual" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="100dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
+        android:id="@+id/guideline_mutual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="110dp" />
+        app:layout_constraintGuide_begin="282dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="135dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="160dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="250dp" />
+        app:layout_constraintGuide_begin="205dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

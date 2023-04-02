@@ -1,35 +1,32 @@
 package com.academy.bangkit.mygithubuser.source.network.response
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class User(
     @field:SerializedName("login")
-    val login: String,
+    val login: String? = null,
+
+    @field:SerializedName("id")
+    val id: Int? = null,
 
     @field:SerializedName("avatar_url")
-    val avatarUrl: String,
+    val avatarUrl: String? = null,
 
     @field:SerializedName("following_url")
-    val followingUrl: String,
-
-    @field:SerializedName("company")
-    val company: String,
+    val followingUrl: String? = null,
 
     @field:SerializedName("followers_url")
-    val followersUrl: String,
-
-    @field:SerializedName("followers")
-    val followers: Int,
-
-    @field:SerializedName("following")
-    val following: Int,
+    val followersUrl: String? = null,
 
     @field:SerializedName("name")
-    val name: String,
+    val name: String? = null,
 
-    @field:SerializedName("location")
-    val location: String
-) : Parcelable
+    @field:SerializedName("company")
+    val company: String? = null,
+
+    @field:SerializedName("followers")
+    val followers: Int? = null,
+
+    @field:SerializedName("following")
+    val following: Int? = null,
+)

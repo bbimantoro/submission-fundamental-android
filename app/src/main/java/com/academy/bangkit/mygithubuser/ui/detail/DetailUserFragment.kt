@@ -5,17 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import androidx.annotation.StringRes
+import androidx.fragment.app.activityViewModels
+import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
 import com.academy.bangkit.mygithubuser.source.network.response.User
 import com.bumptech.glide.Glide
 
 class DetailUserFragment : Fragment() {
 
-    private val detailViewModel by viewModels<DetailViewModel>()
-
-    private lateinit var dataUsername: String
+    private val detailViewModel: DetailViewModel by activityViewModels()
 
     private var _detailUserBinding: FragmentDetailUserBinding? = null
     private val detailUserBinding get() = _detailUserBinding!!
@@ -32,8 +31,26 @@ class DetailUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dataUsername = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
+        val username = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
 
+        detailViewModel.detailUser(username)
+
+        setObserverDataUser()
+
+        setObserverIsLoading()
+    }
+
+    private fun setObserverIsLoading() {
+        detailViewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        detailUserBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun setObserverDataUser() {
         detailViewModel.user.observe(viewLifecycleOwner) { user ->
             setUserData(user)
         }
@@ -41,12 +58,10 @@ class DetailUserFragment : Fragment() {
 
     private fun setUserData(user: User) {
         detailUserBinding.apply {
-            tvUsername.text = dataUsername
+            tvUsername.text = user.login
             tvName.text = user.name
-            tvCompany.text = user.company
-            tvLocation.text = user.location
-            tvFollowers.text = user.followersUrl
-            tvFollowing.text = user.followingUrl
+            tvFollowers.text = user.followers.toString()
+            tvFollowing.text = user.following.toString()
         }
         Glide.with(this)
             .load(user.avatarUrl)
@@ -56,5 +71,15 @@ class DetailUserFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _detailUserBinding = null
+    }
+
+    companion object {
+
+        @StringRes
+        private val TAB_TITLES = intArrayOf(
+            R.string.tab_text_1,
+            R.string.tab_text_2
+        )
+
     }
 }

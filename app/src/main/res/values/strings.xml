@@ -9,10 +9,16 @@
     <string name="label_home">Home</string>
     <string name="label_detail_user">Detail User</string>
 
-    <string name="followers">%d Followers</string>
-    <string name="following">%d Following</string>
+    <string name="tab_text_1">Followers</string>
+    <string name="tab_text_2">Following</string>
+
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="repository">Repos</string>
     <string name="company">Company</string>
     <string name="location">Location</string>
+
+    <string name="default_value_arg">John Doe</string>
 
     <string name="tabs">tabs</string>
 </resources>

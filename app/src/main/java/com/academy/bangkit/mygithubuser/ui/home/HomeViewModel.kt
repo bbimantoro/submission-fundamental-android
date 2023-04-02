@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.academy.bangkit.mygithubuser.Event
-import com.academy.bangkit.mygithubuser.source.network.retrofit.ApiConfig
 import com.academy.bangkit.mygithubuser.source.network.response.User
 import com.academy.bangkit.mygithubuser.source.network.response.UserResponse
+import com.academy.bangkit.mygithubuser.source.network.retrofit.ApiConfig
 import retrofit2.*
 
 class HomeViewModel : ViewModel() {
@@ -18,10 +17,6 @@ class HomeViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _snackBarText = MutableLiveData<Event<String>>()
-    val snackBarText: LiveData<Event<String>> = _snackBarText
-
-
     fun searchUser(q: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getUserBySearch(q)
@@ -29,9 +24,9 @@ class HomeViewModel : ViewModel() {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    _listUser.value = response.body()?.items!!
+                    _listUser.value = response.body()?.items
                 } else {
-                    _snackBarText.value = Event(response.message())
+                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 

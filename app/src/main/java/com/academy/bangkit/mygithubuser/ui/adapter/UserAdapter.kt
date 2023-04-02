@@ -20,14 +20,13 @@ class UserAdapter(
         this.onItemClickCallback = onItemClickCallback
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ListViewHolder(
-            ItemUserBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ListViewHolder(
+        ItemUserBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+    )
 
     override fun getItemCount() = listUser.size
 
@@ -37,16 +36,15 @@ class UserAdapter(
 
     }
 
-    inner class ListViewHolder(private var adapterBinding: ItemUserBinding) :
-        RecyclerView.ViewHolder(adapterBinding.root) {
+    inner class ListViewHolder(private var userAdapterBinding: ItemUserBinding) :
+        RecyclerView.ViewHolder(userAdapterBinding.root) {
         fun bind(data: User) {
-            with(adapterBinding) {
+            with(userAdapterBinding) {
                 ivAvatar.loadImage(data.avatarUrl)
-                tvName.text = data.name
                 tvUsername.text = data.login
-                itemView.setOnClickListener {
-                    onItemClickCallback.onItemClicked(data)
-                }
+            }
+            itemView.setOnClickListener {
+                onItemClickCallback.onItemClicked(data)
             }
         }
     }
@@ -58,7 +56,8 @@ class UserAdapter(
     private fun ImageView.loadImage(url: String?) {
         Glide.with(this.context)
             .load(url)
-            .placeholder(R.drawable.broken_image_24)
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.broken_image_24)
             .into(this)
     }
 }

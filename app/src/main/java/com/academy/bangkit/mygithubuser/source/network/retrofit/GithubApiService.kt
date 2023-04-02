@@ -5,7 +5,7 @@ import com.academy.bangkit.mygithubuser.source.network.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.*
 
-interface ApiService {
+interface GithubApiService {
     @GET("search/users")
     fun getUserBySearch(
         @Query("q") q: String
@@ -20,5 +20,5 @@ interface ApiService {
     fun getMutual(
         @Path("login") login: String,
         @Path("type") type: String
-    ): Call<List<UserResponse>>
+    ): Call<List<User>>
 }

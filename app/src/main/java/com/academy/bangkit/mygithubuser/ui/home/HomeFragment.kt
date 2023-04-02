@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +18,12 @@ import com.academy.bangkit.mygithubuser.ui.adapter.UserAdapter
 
 class HomeFragment : Fragment() {
 
-    private val homeViewModel by viewModels<HomeViewModel>()
-
-    private lateinit var adapter: UserAdapter
-    private val listUser = ArrayList<User>()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private var _homeBinding: FragmentHomeBinding? = null
     private val homeBinding get() = _homeBinding!!
+
+    private val listUser = ArrayList<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +70,37 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private fun setRecyclerViewData(users: List<User>) {
+
+        homeBinding.rvUser.setHasFixedSize(true)
+
+        if (requireActivity().applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            homeBinding.rvUser.layoutManager = GridLayoutManager(requireActivity(), 2)
+        } else {
+            homeBinding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
+        }
+
+        val adapter = UserAdapter(users)
+        homeBinding.rvUser.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: User) {
+
+                val username = data.login!!
+                val toDetailUserFragment =
+                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment()
+                toDetailUserFragment.username = username
+                findNavController().navigate(toDetailUserFragment)
+
+            }
+        })
+
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        homeBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
     private fun setObserverListUser() {
         homeViewModel.listUser.observe(viewLifecycleOwner) {
             setRecyclerViewData(it)
@@ -81,31 +111,6 @@ class HomeFragment : Fragment() {
         homeViewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
         }
-    }
-
-    private fun setRecyclerViewData(user: List<User>) {
-
-        homeBinding.rvUser.setHasFixedSize(true)
-        if (requireActivity().applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            homeBinding.rvUser.layoutManager = GridLayoutManager(requireActivity(), 2)
-        } else {
-            homeBinding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
-        }
-        adapter = UserAdapter(user)
-        homeBinding.rvUser.adapter = adapter
-
-        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: User) {
-                val toDetailUserFragment =
-                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(data.login)
-                findNavController().navigate(toDetailUserFragment)
-            }
-        })
-
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        homeBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {
