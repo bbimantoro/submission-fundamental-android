@@ -72,7 +72,7 @@ class DetailUserFragment : Fragment() {
 
         binding.apply {
             tvUsername.text = user.login
-            tvName.text = user.name
+            tvName.text = user.name ?: ""
             tvFollowers.text = user.followers.toString()
             tvFollowing.text = user.following.toString()
         }
