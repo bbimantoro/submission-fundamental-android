@@ -37,10 +37,10 @@ class UserAdapter(
 
     }
 
-    inner class ListViewHolder(private var userAdapterBinding: ItemUserBinding) :
-        RecyclerView.ViewHolder(userAdapterBinding.root) {
+    inner class ListViewHolder(private var binding: ItemUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(data: User) {
-            with(userAdapterBinding) {
+            with(binding) {
                 ivAvatar.loadImage(data.avatarUrl)
                 tvUsername.text = data.login
             }

@@ -14,9 +14,6 @@
 
     <string name="followers">Followers</string>
     <string name="following">Following</string>
-    <string name="repository">Repos</string>
-    <string name="company">Company</string>
-    <string name="location">Location</string>
 
     <string name="tabs">tabs</string>
 </resources>

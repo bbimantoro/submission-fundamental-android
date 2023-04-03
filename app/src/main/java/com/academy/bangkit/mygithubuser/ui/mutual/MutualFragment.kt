@@ -8,7 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.academy.bangkit.mygithubuser.databinding.FragmentMutualBinding
-import com.academy.bangkit.mygithubuser.ui.adapter.UserAdapter
+import com.academy.bangkit.mygithubuser.source.network.response.User
+import com.academy.bangkit.mygithubuser.ui.adapter.MutualAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class MutualFragment : Fragment() {
@@ -17,8 +18,6 @@ class MutualFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MutualViewModel by viewModels()
-
-    private lateinit var adapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,16 +31,39 @@ class MutualFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setRecyclerViewData()
-    }
+        val position = arguments?.getInt(ARG_POSITION, 0)
+        val username = arguments?.getString(ARG_USERNAME)
 
-    private fun setRecyclerViewData() {
         binding.rvUser.setHasFixedSize(true)
         binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
         val divider =
             MaterialDividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)
         binding.rvUser.addItemDecoration(divider)
-        adapter = UserAdapter(mutableListOf())
+
+        if (position == 1) {
+            viewModel.lisFollowers.observe(viewLifecycleOwner) { follower ->
+                setFollowersData(follower)
+            }
+            username?.let { viewModel.followersUser(it) }
+        } else {
+            viewModel.listFollowing.observe(viewLifecycleOwner) { following ->
+                setFollowingUserData(following)
+            }
+            username?.let { viewModel.followingUser(it) }
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
+    }
+
+    private fun setFollowersData(user: List<User>) {
+        val adapter = MutualAdapter(user)
+        binding.rvUser.adapter = adapter
+    }
+
+    private fun setFollowingUserData(user: List<User>) {
+        val adapter = MutualAdapter(user)
         binding.rvUser.adapter = adapter
     }
 

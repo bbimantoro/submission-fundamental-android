@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
 import com.academy.bangkit.mygithubuser.source.network.response.User
@@ -19,8 +17,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DetailUserFragment : Fragment() {
 
     private val viewModel: DetailViewModel by viewModels()
-
-    private lateinit var viewPager: ViewPager2
 
     private var _binding: FragmentDetailUserBinding? = null
     private val binding get() = _binding!!
@@ -39,9 +35,9 @@ class DetailUserFragment : Fragment() {
 
         setTabLayoutView()
 
-        val username = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
+        val dataUsername = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
 
-        viewModel.detailUser(username)
+        viewModel.detailUser(dataUsername)
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             setUserData(user)
@@ -56,9 +52,11 @@ class DetailUserFragment : Fragment() {
     private fun setTabLayoutView() {
 
         val sectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager, lifecycle)
-        viewPager = binding.includeMutualLayout.viewpager
+        sectionsPagerAdapter.username =
+            DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
+        val viewPager = binding.viewpager
         viewPager.adapter = sectionsPagerAdapter
-        val tabLayout = binding.includeMutualLayout.tabs
+        val tabLayout = binding.tabs
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
