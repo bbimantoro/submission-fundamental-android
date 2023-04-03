@@ -65,10 +65,11 @@ class HomeFragment : Fragment() {
         adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: User) {
 
-                val toDetailUserFragment =
-                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(data.login!!)
-                toDetailUserFragment.username = data.login
-                findNavController().navigate(toDetailUserFragment)
+                data.login?.let {
+                    val toDetailUserFragment =
+                        HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(it)
+                    findNavController().navigate(toDetailUserFragment)
+                }
 
             }
         })

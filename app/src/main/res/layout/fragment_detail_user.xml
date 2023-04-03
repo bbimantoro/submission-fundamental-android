@@ -93,14 +93,14 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/include"
+        app:layout_constraintBottom_toTopOf="@+id/include_mutual_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/include_mutual_layout"
         layout="@layout/layout_mutual"
         android:layout_width="@dimen/width_and_height_size"
         android:layout_height="wrap_content"

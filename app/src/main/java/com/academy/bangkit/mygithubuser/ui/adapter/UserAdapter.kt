@@ -50,6 +50,10 @@ class UserAdapter(
         }
     }
 
+    interface OnItemClickCallback {
+        fun onItemClicked(data: User)
+    }
+
     fun updateListUser(newListUser: List<User>) {
         val diffResult = DiffUtil.calculateDiff(diffCallback(listUser, newListUser))
         listUser = newListUser
@@ -70,10 +74,6 @@ class UserAdapter(
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
             oldList[oldItemPosition] == newList[newItemPosition]
-    }
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: User)
     }
 
     private fun ImageView.loadImage(url: String?) {
