@@ -10,11 +10,11 @@ import com.academy.bangkit.mygithubuser.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
-    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
         val navHostFragment =

@@ -12,11 +12,8 @@ import retrofit2.Response
 
 class MutualViewModel : ViewModel() {
 
-    private val _listFollowers = MutableLiveData<List<User>>()
-    val lisFollowers: LiveData<List<User>> = _listFollowers
-
-    private val _listFollowing = MutableLiveData<List<User>>()
-    val listFollowing: LiveData<List<User>> = _listFollowing
+    private val _listUser = MutableLiveData<List<User>>()
+    val listUser: LiveData<List<User>> = _listUser
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -28,7 +25,7 @@ class MutualViewModel : ViewModel() {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    _listFollowers.value = response.body()
+                    _listUser.value = response.body()
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
@@ -48,7 +45,7 @@ class MutualViewModel : ViewModel() {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    _listFollowing.value = response.body()
+                    _listUser.value = response.body()
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }

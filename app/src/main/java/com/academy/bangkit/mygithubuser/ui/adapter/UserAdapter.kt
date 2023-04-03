@@ -50,6 +50,14 @@ class UserAdapter(
         }
     }
 
+    private fun ImageView.loadImage(url: String?) {
+        Glide.with(this.context)
+            .load(url)
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.broken_image_24)
+            .into(this)
+    }
+
     interface OnItemClickCallback {
         fun onItemClicked(data: User)
     }
@@ -69,18 +77,10 @@ class UserAdapter(
 
         override fun getNewListSize(): Int = newList.size
 
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             oldList[oldItemPosition].id == newList[newItemPosition].id
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             oldList[oldItemPosition] == newList[newItemPosition]
-    }
-
-    private fun ImageView.loadImage(url: String?) {
-        Glide.with(this.context)
-            .load(url)
-            .placeholder(R.drawable.ic_loading)
-            .error(R.drawable.broken_image_24)
-            .into(this)
     }
 }

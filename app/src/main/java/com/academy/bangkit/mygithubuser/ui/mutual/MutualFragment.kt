@@ -17,6 +17,8 @@ class MutualFragment : Fragment() {
     private var _binding: FragmentMutualBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var adapter: MutualAdapter
+
     private val viewModel: MutualViewModel by viewModels()
 
     override fun onCreateView(
@@ -34,20 +36,17 @@ class MutualFragment : Fragment() {
         val position = arguments?.getInt(ARG_POSITION, 0)
         val username = arguments?.getString(ARG_USERNAME)
 
-        binding.rvUser.setHasFixedSize(true)
-        binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
-        val divider =
-            MaterialDividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)
-        binding.rvUser.addItemDecoration(divider)
+        setRecyclerViewData()
+
 
         if (position == 1) {
-            viewModel.lisFollowers.observe(viewLifecycleOwner) { follower ->
-                setFollowersData(follower)
+            viewModel.listUser.observe(viewLifecycleOwner) { followers ->
+                adapter.updateListUser(followers)
             }
             username?.let { viewModel.followersUser(it) }
         } else {
-            viewModel.listFollowing.observe(viewLifecycleOwner) { following ->
-                setFollowingUserData(following)
+            viewModel.listUser.observe(viewLifecycleOwner) { following ->
+                adapter.updateListUser(following)
             }
             username?.let { viewModel.followingUser(it) }
         }
@@ -55,6 +54,17 @@ class MutualFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
         }
+    }
+
+    private fun setRecyclerViewData() {
+        binding.rvUser.setHasFixedSize(true)
+        binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
+        val divider =
+            MaterialDividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)
+        binding.rvUser.addItemDecoration(divider)
+
+        adapter = MutualAdapter(mutableListOf())
+        binding.rvUser.adapter = adapter
     }
 
     private fun setFollowersData(user: List<User>) {

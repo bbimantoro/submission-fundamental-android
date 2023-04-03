@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
 import com.academy.bangkit.mygithubuser.source.network.response.User
@@ -17,6 +18,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DetailUserFragment : Fragment() {
 
     private val viewModel: DetailViewModel by viewModels()
+
+    private lateinit var viewPager: ViewPager2
 
     private var _binding: FragmentDetailUserBinding? = null
     private val binding get() = _binding!!
@@ -54,14 +57,13 @@ class DetailUserFragment : Fragment() {
         val sectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager, lifecycle)
         sectionsPagerAdapter.username =
             DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
-        val viewPager = binding.viewpager
+        viewPager = binding.layoutMutual.viewpager
         viewPager.adapter = sectionsPagerAdapter
-        val tabLayout = binding.tabs
+        val tabLayout = binding.layoutMutual.tabs
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
     }
-
     private fun setUserData(user: User) {
 
         Glide.with(this)
@@ -75,23 +77,18 @@ class DetailUserFragment : Fragment() {
             tvFollowing.text = user.following.toString()
         }
     }
-
     private fun showLoading(isLoading: Boolean) {
         binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
     companion object {
-
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.tab_text_1,
             R.string.tab_text_2
         )
-
     }
 }

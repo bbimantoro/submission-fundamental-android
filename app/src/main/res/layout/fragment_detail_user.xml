@@ -66,6 +66,7 @@
         tools:text="@string/following" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
@@ -91,28 +92,21 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintBottom_toTopOf="@+id/layout_mutual"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="@dimen/width_and_height_size"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/tabs"
+    <include
+        android:id="@+id/layout_mutual"
+        layout="@layout/layout_mutual"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_mutual" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager"
-        android:layout_width="@dimen/width_and_height_size"
-        android:layout_height="@dimen/width_and_height_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabs" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_mutual"
