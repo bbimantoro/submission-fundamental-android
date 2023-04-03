@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.academy.bangkit.mygithubuser.databinding.FragmentMutualBinding
-import com.academy.bangkit.mygithubuser.source.network.response.User
 import com.academy.bangkit.mygithubuser.ui.adapter.MutualAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
@@ -24,7 +23,7 @@ class MutualFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentMutualBinding.inflate(inflater, container, false)
         return binding.root
@@ -57,24 +56,17 @@ class MutualFragment : Fragment() {
     }
 
     private fun setRecyclerViewData() {
-        binding.rvUser.setHasFixedSize(true)
-        binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
         val divider =
             MaterialDividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)
-        binding.rvUser.addItemDecoration(divider)
 
         adapter = MutualAdapter(mutableListOf())
-        binding.rvUser.adapter = adapter
-    }
 
-    private fun setFollowersData(user: List<User>) {
-        val adapter = MutualAdapter(user)
-        binding.rvUser.adapter = adapter
-    }
-
-    private fun setFollowingUserData(user: List<User>) {
-        val adapter = MutualAdapter(user)
-        binding.rvUser.adapter = adapter
+        with(binding) {
+            rvUser.setHasFixedSize(true)
+            rvUser.layoutManager = LinearLayoutManager(requireActivity())
+            rvUser.addItemDecoration(divider)
+            rvUser.adapter = adapter
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {
