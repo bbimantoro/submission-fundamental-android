@@ -3,6 +3,7 @@ package com.academy.bangkit.mygithubuser.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.ItemUserBinding
@@ -10,7 +11,7 @@ import com.academy.bangkit.mygithubuser.source.network.response.User
 import com.bumptech.glide.Glide
 
 class UserAdapter(
-    private val listUser: List<User>
+    private var listUser: List<User>
 ) :
     RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
 
@@ -47,6 +48,28 @@ class UserAdapter(
                 onItemClickCallback.onItemClicked(data)
             }
         }
+    }
+
+    fun updateListUser(newListUser: List<User>) {
+        val diffResult = DiffUtil.calculateDiff(diffCallback(listUser, newListUser))
+        listUser = newListUser
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    private fun diffCallback(
+        oldList: List<User>,
+        newList: List<User>
+    ) = object : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition].id == newList[newItemPosition].id
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] == newList[newItemPosition]
     }
 
     interface OnItemClickCallback {

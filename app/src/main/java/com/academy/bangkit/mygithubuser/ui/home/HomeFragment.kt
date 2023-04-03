@@ -18,32 +18,60 @@ import com.academy.bangkit.mygithubuser.ui.adapter.UserAdapter
 
 class HomeFragment : Fragment() {
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
-    private var _homeBinding: FragmentHomeBinding? = null
-    private val homeBinding get() = _homeBinding!!
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-    private val listUser = ArrayList<User>()
+    private lateinit var adapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _homeBinding = FragmentHomeBinding.inflate(inflater, container, false)
-        return homeBinding.root
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        setRecyclerViewData(listUser)
+        setRecyclerViewData()
 
-        setObserverListUser()
+        viewModel.listUser.observe(viewLifecycleOwner) { user ->
+            adapter.updateListUser(user)
+        }
 
-        setObserverIsLoading()
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
 
+    }
+
+    private fun setRecyclerViewData() {
+        binding.rvUser.setHasFixedSize(true)
+
+        if (requireActivity().applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.rvUser.layoutManager = GridLayoutManager(requireActivity(), 2)
+        } else {
+            binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
+        }
+
+        adapter = UserAdapter(mutableListOf())
+        binding.rvUser.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: User) {
+
+                val toDetailUserFragment =
+                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(data.login!!)
+                toDetailUserFragment.username = data.login
+                findNavController().navigate(toDetailUserFragment)
+
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,7 +86,7 @@ class HomeFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    homeViewModel.searchUser(it)
+                    viewModel.searchUser(it)
                 }
                 searchView.clearFocus()
                 return true
@@ -70,51 +98,12 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun setRecyclerViewData(users: List<User>) {
-
-        homeBinding.rvUser.setHasFixedSize(true)
-
-        if (requireActivity().applicationContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            homeBinding.rvUser.layoutManager = GridLayoutManager(requireActivity(), 2)
-        } else {
-            homeBinding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
-        }
-
-        val adapter = UserAdapter(users)
-        homeBinding.rvUser.adapter = adapter
-
-        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: User) {
-
-                val username = data.login!!
-                val toDetailUserFragment =
-                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment()
-                toDetailUserFragment.username = username
-                findNavController().navigate(toDetailUserFragment)
-
-            }
-        })
-
-    }
-
     private fun showLoading(isLoading: Boolean) {
-        homeBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun setObserverListUser() {
-        homeViewModel.listUser.observe(viewLifecycleOwner) {
-            setRecyclerViewData(it)
-        }
-    }
-
-    private fun setObserverIsLoading() {
-        homeViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
-        }
+        binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _homeBinding = null
+        _binding = null
     }
 }

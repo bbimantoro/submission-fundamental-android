@@ -3,25 +3,25 @@ package com.academy.bangkit.mygithubuser.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.academy.bangkit.mygithubuser.databinding.ItemUserBinding
+import com.academy.bangkit.mygithubuser.databinding.ItemMutualUserBinding
 import com.academy.bangkit.mygithubuser.source.network.response.User
 import com.bumptech.glide.Glide
 
-class MutualAdapter(private val users: List<User>) :
+class MutualAdapter(private val user: List<User>) :
     RecyclerView.Adapter<MutualAdapter.ListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ListViewHolder(
-        ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        ItemMutualUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun getItemCount() = users.size
+    override fun getItemCount() = user.size
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val data = users[position]
+        val data = user[position]
         holder.bind(data)
     }
 
-    class ListViewHolder(private var mutualAdapterBinding: ItemUserBinding) :
+    class ListViewHolder(private var mutualAdapterBinding: ItemMutualUserBinding) :
         RecyclerView.ViewHolder(mutualAdapterBinding.root) {
 
         fun bind(data: User) {

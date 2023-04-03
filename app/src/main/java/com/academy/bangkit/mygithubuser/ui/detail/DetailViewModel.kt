@@ -36,6 +36,7 @@ class DetailViewModel : ViewModel() {
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
+
     }
 
     companion object {

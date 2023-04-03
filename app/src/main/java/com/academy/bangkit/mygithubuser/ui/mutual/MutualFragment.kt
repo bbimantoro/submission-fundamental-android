@@ -10,31 +10,51 @@ import com.academy.bangkit.mygithubuser.databinding.FragmentMutualBinding
 
 class MutualFragment : Fragment() {
 
-    private var _mutualFragment: FragmentMutualBinding? = null
-    private val mutualFragment get() = _mutualFragment!!
+    private var _mutualBinding: FragmentMutualBinding? = null
+    private val mutualBinding get() = _mutualBinding!!
 
     private val mutualViewModel: MutualViewModel by activityViewModels()
+
+    private var position: Int = 0
+    private var username: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _mutualFragment = FragmentMutualBinding.inflate(inflater, container, false)
-        return mutualFragment.root
+        _mutualBinding = FragmentMutualBinding.inflate(inflater, container, false)
+        return mutualBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
+            position = it.getInt(ARG_TAB)
+            username = it.getString(ARG_USERNAME)
+        }
+
+        if (position == 1) {
 
         }
+
+        mutualViewModel.mutualUser.observe(viewLifecycleOwner) {
+
+        }
+
+        mutualViewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        mutualBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _mutualFragment = null
+        _mutualBinding = null
     }
 
     companion object {

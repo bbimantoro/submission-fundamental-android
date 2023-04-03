@@ -7,6 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.academy.bangkit.mygithubuser.ui.detail.DetailUserFragment
 import com.academy.bangkit.mygithubuser.ui.mutual.MutualFragment
 
+private const val TAB_COUNT = 2
+private const val INCREMENT_INT = 1
+
 class SectionsPagerAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fragment) {
 
     var username: String = ""
@@ -21,9 +24,4 @@ class SectionsPagerAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fr
     }
 
     override fun getItemCount() = TAB_COUNT
-
-    companion object {
-        const val TAB_COUNT = 2
-        const val INCREMENT_INT = 1
-    }
 }

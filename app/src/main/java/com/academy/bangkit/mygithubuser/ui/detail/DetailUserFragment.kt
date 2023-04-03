@@ -10,22 +10,24 @@ import androidx.fragment.app.activityViewModels
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
 import com.academy.bangkit.mygithubuser.source.network.response.User
+import com.academy.bangkit.mygithubuser.ui.adapter.SectionsPagerAdapter
+import com.academy.bangkit.mygithubuser.ui.adapter.UserAdapter
 import com.bumptech.glide.Glide
 
 class DetailUserFragment : Fragment() {
 
-    private val detailViewModel: DetailViewModel by activityViewModels()
+    private val viewModel: DetailViewModel by activityViewModels()
 
-    private var _detailUserBinding: FragmentDetailUserBinding? = null
-    private val detailUserBinding get() = _detailUserBinding!!
+    private var _binding: FragmentDetailUserBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _detailUserBinding = FragmentDetailUserBinding.inflate(inflater, container, false)
-        return detailUserBinding.root
+        _binding = FragmentDetailUserBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,44 +35,45 @@ class DetailUserFragment : Fragment() {
 
         val username = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
 
-        detailViewModel.detailUser(username)
+        viewModel.detailUser(username)
 
-        setObserverDataUser()
+        setTabLayout()
 
-        setObserverIsLoading()
-    }
-
-    private fun setObserverIsLoading() {
-        detailViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
-        }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        detailUserBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun setObserverDataUser() {
-        detailViewModel.user.observe(viewLifecycleOwner) { user ->
+        viewModel.user.observe(viewLifecycleOwner) { user ->
             setUserData(user)
         }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
+
+    }
+
+    private fun setTabLayout() {
+//        val sectionsPagerAdapter = SectionsPagerAdapter()
     }
 
     private fun setUserData(user: User) {
-        detailUserBinding.apply {
+
+        Glide.with(this)
+            .load(user.avatarUrl)
+            .into(binding.ivAvatar)
+
+        binding.apply {
             tvUsername.text = user.login
             tvName.text = user.name
             tvFollowers.text = user.followers.toString()
             tvFollowing.text = user.following.toString()
         }
-        Glide.with(this)
-            .load(user.avatarUrl)
-            .into(detailUserBinding.ivAvatar)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _detailUserBinding = null
+        _binding = null
     }
 
     companion object {
