@@ -1,4 +1,4 @@
-package com.academy.bangkit.mygithubuser.source.network.response
+package com.academy.bangkit.mygithubuser.data.network.response
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.academy.bangkit.mygithubuser.source.network.retrofit
+package com.academy.bangkit.mygithubuser.data.network.retrofit
 
 import com.academy.bangkit.mygithubuser.BuildConfig
 import okhttp3.Interceptor

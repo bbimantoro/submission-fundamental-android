@@ -7,19 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.ItemUserBinding
-import com.academy.bangkit.mygithubuser.source.network.response.User
+import com.academy.bangkit.mygithubuser.helper.GithubUserDiffCallback
+import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.bumptech.glide.Glide
 
-class UserAdapter(
-    private var listUser: List<User>
-) :
+class UserAdapter(private val onClickItemUser: (User) -> Unit) :
     RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
 
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+    private val listUser = ArrayList<User>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ListViewHolder(
         ItemUserBinding.inflate(
@@ -34,7 +29,6 @@ class UserAdapter(
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val data = listUser[position]
         holder.bind(data)
-
     }
 
     inner class ListViewHolder(private var binding: ItemUserBinding) :
@@ -45,7 +39,7 @@ class UserAdapter(
                 tvUsername.text = data.login
             }
             itemView.setOnClickListener {
-                onItemClickCallback.onItemClicked(data)
+                onClickItemUser(data)
             }
         }
     }
@@ -58,29 +52,11 @@ class UserAdapter(
             .into(this)
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(data: User)
-    }
-
-    fun updateListUser(newListUser: List<User>) {
-        val diffResult = DiffUtil.calculateDiff(diffCallback(listUser, newListUser))
-        listUser = newListUser
+    fun setListUser(newListUser: List<User>) {
+        val diffCallback = GithubUserDiffCallback(this.listUser, newListUser)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        this.listUser.clear()
+        this.listUser.addAll(newListUser)
         diffResult.dispatchUpdatesTo(this)
-    }
-
-    private fun diffCallback(
-        oldList: List<User>,
-        newList: List<User>
-    ) = object : DiffUtil.Callback() {
-
-        override fun getOldListSize(): Int = oldList.size
-
-        override fun getNewListSize(): Int = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition].id == newList[newItemPosition].id
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

@@ -7,26 +7,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.academy.bangkit.mygithubuser.databinding.FragmentMutualBinding
 import com.academy.bangkit.mygithubuser.ui.adapter.MutualAdapter
+import com.academy.bangkit.mygithubuser.data.Result
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class MutualFragment : Fragment() {
 
-    private var _binding: FragmentMutualBinding? = null
-    private val binding get() = _binding!!
+    private var _mutualBinding: FragmentMutualBinding? = null
+    private val mutualBinding get() = _mutualBinding!!
 
     private lateinit var adapter: MutualAdapter
 
-    private val viewModel: MutualViewModel by viewModels()
+    private val mutualViewModel: MutualViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentMutualBinding.inflate(inflater, container, false)
-        return binding.root
+        _mutualBinding = FragmentMutualBinding.inflate(inflater, container, false)
+        return mutualBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,21 +39,16 @@ class MutualFragment : Fragment() {
 
         setRecyclerViewData()
 
-
         if (position == 1) {
-            viewModel.listUser.observe(viewLifecycleOwner) { followers ->
-                adapter.updateListUser(followers)
+            username?.let { mutualViewModel.getFollowersUser(it) }
+            mutualViewModel.result.observe(viewLifecycleOwner) { result ->
+                setUserData(result)
             }
-            username?.let { viewModel.followersUser(it) }
         } else {
-            viewModel.listUser.observe(viewLifecycleOwner) { following ->
-                adapter.updateListUser(following)
+            username?.let { mutualViewModel.getFollowingUser(it) }
+            mutualViewModel.result.observe(viewLifecycleOwner) { result ->
+                setUserData(result)
             }
-            username?.let { viewModel.followingUser(it) }
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
         }
     }
 
@@ -59,9 +56,9 @@ class MutualFragment : Fragment() {
         val divider =
             MaterialDividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL)
 
-        adapter = MutualAdapter(mutableListOf())
+        adapter = MutualAdapter()
 
-        with(binding) {
+        with(mutualBinding) {
             rvUser.setHasFixedSize(true)
             rvUser.layoutManager = LinearLayoutManager(requireActivity())
             rvUser.addItemDecoration(divider)
@@ -69,13 +66,24 @@ class MutualFragment : Fragment() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    private fun setUserData(result: Result<List<User>>) {
+        when (result) {
+            is Result.Loading -> {
+                mutualBinding.progressbar.visibility = View.VISIBLE
+            }
+            is Result.Success -> {
+                mutualBinding.progressbar.visibility = View.GONE
+
+                val listUser = result.data
+                adapter.setListUser(listUser)
+            }
+            else -> {}
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        _mutualBinding = null
     }
 
     companion object {

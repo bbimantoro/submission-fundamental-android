@@ -4,37 +4,27 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.academy.bangkit.mygithubuser.source.network.response.User
-import com.academy.bangkit.mygithubuser.source.network.response.UserResponse
-import com.academy.bangkit.mygithubuser.source.network.retrofit.ApiConfig
-import retrofit2.*
+import androidx.lifecycle.viewModelScope
+import com.academy.bangkit.mygithubuser.data.network.response.User
+import com.academy.bangkit.mygithubuser.data.Result
+import com.academy.bangkit.mygithubuser.data.network.retrofit.ApiConfig
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    private val _listUser = MutableLiveData<List<User>>()
-    val listUser: LiveData<List<User>> = _listUser
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    fun searchUser(q: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getUserBySearch(q)
-        client.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _listUser.value = response.body()?.items
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                }
+    private val _result = MutableLiveData<Result<List<User>>>()
+    val result: LiveData<Result<List<User>>> = _result
+    fun getUserBySearch(q: String) {
+        viewModelScope.launch {
+            _result.value = Result.Loading
+            try {
+                val response = ApiConfig.getApiService().getUserBySearch(q)
+                _result.value = Result.Success(response.items)
+            } catch (e: Exception) {
+                Log.d(TAG, "getUserBySearch : ${e.message.toString()}")
+                _result.value = Result.Error
             }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
+        }
     }
 
     companion object {

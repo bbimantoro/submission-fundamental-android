@@ -7,4 +7,18 @@
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
+
+    <group android:menuCategory="container">
+        <item
+            android:id="@+id/favorite"
+            android:icon="@drawable/favorite_24"
+            android:title="@string/favorite"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/theme"
+            android:icon="@drawable/color_lens_24"
+            android:title="@string/theme" />
+    </group>
+
 </menu>

@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_homeFragment_to_detailUserFragment"
             app:destination="@id/detail_user_dest" />
+        <action
+            android:id="@+id/action_home_dest_to_favoriteUserFragment"
+            app:destination="@id/favoriteUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/detail_user_dest"
@@ -27,4 +30,9 @@
         android:name="com.academy.bangkit.mygithubuser.ui.mutual.MutualFragment"
         android:label="fragment_mutual"
         tools:layout="@layout/fragment_mutual" />
+    <fragment
+        android:id="@+id/favoriteUserFragment"
+        android:name="com.academy.bangkit.mygithubuser.ui.favorite.FavoriteUserFragment"
+        android:label="fragment_favorite_user"
+        tools:layout="@layout/fragment_favorite_user" />
 </navigation>

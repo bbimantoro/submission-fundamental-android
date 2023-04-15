@@ -7,83 +7,90 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
-import com.academy.bangkit.mygithubuser.source.network.response.User
+import com.academy.bangkit.mygithubuser.data.network.response.User
+import com.academy.bangkit.mygithubuser.ui.ViewModelFactory
+import com.academy.bangkit.mygithubuser.data.Result
 import com.academy.bangkit.mygithubuser.ui.adapter.SectionsPagerAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailUserFragment : Fragment() {
 
-    private val viewModel: DetailViewModel by viewModels()
-
-    private lateinit var viewPager: ViewPager2
-
-    private var _binding: FragmentDetailUserBinding? = null
-    private val binding get() = _binding!!
+    private var _detailUserBinding: FragmentDetailUserBinding? = null
+    private val detailUserBinding get() = _detailUserBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentDetailUserBinding.inflate(inflater, container, false)
-        return binding.root
+        _detailUserBinding = FragmentDetailUserBinding.inflate(inflater, container, false)
+        return detailUserBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setTabLayoutView()
-
-        val dataUsername = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
-
-        viewModel.detailUser(dataUsername)
-
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            setUserData(user)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val detailViewModel: DetailViewModel by viewModels {
+            factory
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
+        setTabLayoutView()
+
+        val username = DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
+
+        detailViewModel.getDetailUser(username)
+
+        detailViewModel.result.observe(viewLifecycleOwner) { result ->
+            setUserData(result)
         }
 
     }
 
     private fun setTabLayoutView() {
-
         val sectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager, lifecycle)
         sectionsPagerAdapter.username =
             DetailUserFragmentArgs.fromBundle(arguments as Bundle).username
-        viewPager = binding.layoutMutual.viewpager
-        viewPager.adapter = sectionsPagerAdapter
-        val tabLayout = binding.layoutMutual.tabs
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        detailUserBinding.layoutMutual.viewpager.adapter = sectionsPagerAdapter
+        TabLayoutMediator(
+            detailUserBinding.layoutMutual.tabs,
+            detailUserBinding.layoutMutual.viewpager
+        ) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
     }
-    private fun setUserData(user: User) {
 
-        Glide.with(this)
-            .load(user.avatarUrl)
-            .into(binding.ivAvatar)
+    private fun setUserData(result: Result<User>) {
+        when (result) {
+            is Result.Loading -> {
+                detailUserBinding.progressbar.visibility = View.VISIBLE
+            }
+            is Result.Success -> {
+                detailUserBinding.progressbar.visibility = View.GONE
 
-        binding.apply {
-            tvUsername.text = user.login
-            tvName.text = user.name ?: ""
-            tvFollowers.text = user.followers.toString()
-            tvFollowing.text = user.following.toString()
+                Glide.with(this)
+                    .load(result.data.avatarUrl)
+                    .into(detailUserBinding.ivAvatar)
+
+                detailUserBinding.apply {
+                    tvUsername.text = result.data.name
+                    tvName.text = result.data.name
+                    tvFollowers.text = result.data.followers.toString()
+                    tvFollowing.text = result.data.following.toString()
+                }
+            }
+            else -> {}
         }
     }
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
+
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        _detailUserBinding = null
     }
+
     companion object {
         @StringRes
         private val TAB_TITLES = intArrayOf(

@@ -4,39 +4,40 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.academy.bangkit.mygithubuser.source.network.response.User
-import com.academy.bangkit.mygithubuser.source.network.retrofit.ApiConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+import com.academy.bangkit.mygithubuser.data.UserRepository
+import com.academy.bangkit.mygithubuser.data.local.entity.UserEntity
+import com.academy.bangkit.mygithubuser.data.network.response.User
+import com.academy.bangkit.mygithubuser.data.network.retrofit.ApiConfig
+import com.academy.bangkit.mygithubuser.data.Result
+import kotlinx.coroutines.launch
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    fun detailUser(username: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getDetailUser(username)
-        client.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _user.value = response.body()
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                }
+    private val _result = MutableLiveData<Result<User>>()
+    val result: LiveData<Result<User>> = _result
+    fun getDetailUser(username: String) {
+        viewModelScope.launch {
+            _result.value = Result.Loading
+            try {
+                val response = ApiConfig.getApiService().getDetailUser(username)
+                _result.value = Result.Success(response)
+            } catch (e: Exception) {
+                Log.e(TAG, "getDetailUser : ${e.message.toString()}")
             }
+        }
+    }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
+    fun insertUser(user: UserEntity) {
+        viewModelScope.launch {
+            userRepository.insertUser(user)
+        }
+    }
 
+    fun deleteUser(user: UserEntity) {
+        viewModelScope.launch {
+            userRepository.deleteUser(user)
+        }
     }
 
     companion object {

@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.ItemMutualUserBinding
-import com.academy.bangkit.mygithubuser.source.network.response.User
+import com.academy.bangkit.mygithubuser.helper.GithubUserDiffCallback
+import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.bumptech.glide.Glide
 
-class MutualAdapter(private var listUser: List<User>) :
-    RecyclerView.Adapter<MutualAdapter.ViewHolder>() {
+class MutualAdapter : RecyclerView.Adapter<MutualAdapter.ViewHolder>() {
 
-
+    private val listUser = ArrayList<User>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         ItemMutualUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
@@ -44,25 +44,11 @@ class MutualAdapter(private var listUser: List<User>) :
             .into(this)
     }
 
-    fun updateListUser(newListUser: List<User>) {
-        val diffResult = DiffUtil.calculateDiff(diffCallback(listUser, newListUser))
-        listUser = newListUser
+    fun setListUser(newListUser: List<User>) {
+        val diffCallback = GithubUserDiffCallback(this.listUser, newListUser)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        this.listUser.clear()
+        this.listUser.addAll(newListUser)
         diffResult.dispatchUpdatesTo(this)
-    }
-
-    private fun diffCallback(
-        oldList: List<User>,
-        newList: List<User>,
-    ) = object : DiffUtil.Callback() {
-        override fun getOldListSize() = oldList.size
-
-        override fun getNewListSize() = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition].id == newList[newItemPosition].id
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition] == newList[newItemPosition]
-
     }
 }
