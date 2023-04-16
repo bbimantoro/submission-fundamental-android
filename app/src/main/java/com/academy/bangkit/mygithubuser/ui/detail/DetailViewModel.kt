@@ -8,30 +8,28 @@ import androidx.lifecycle.viewModelScope
 import com.academy.bangkit.mygithubuser.data.UserRepository
 import com.academy.bangkit.mygithubuser.data.local.entity.UserEntity
 import com.academy.bangkit.mygithubuser.data.network.response.User
+import com.academy.bangkit.mygithubuser.data.Result
 import com.academy.bangkit.mygithubuser.data.network.retrofit.ApiConfig
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
+    private val _result = MutableLiveData<Result<User>>()
+    val result: LiveData<Result<User>> = _result
     fun getDetailUser(username: String) {
         viewModelScope.launch {
-            _isLoading.value = true
+            _result.value = Result.Loading
             try {
                 val response = ApiConfig.getApiService().getDetailUser(username)
-                _isLoading.value = false
-                _user.value = response
+                _result.value = Result.Success(response)
             } catch (e: Exception) {
-                _isLoading.value = true
                 Log.e(TAG, "getDetailUser : ${e.message.toString()}")
             }
         }
     }
+
+    fun retrieveUser(username: String): LiveData<List<UserEntity>> =
+        userRepository.retrieveUser(username)
 
     fun insertUser(user: UserEntity) {
         viewModelScope.launch {

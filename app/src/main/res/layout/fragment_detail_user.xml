@@ -104,9 +104,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/margin_normal"
         android:contentDescription="@string/add_to_favorite"
-        android:src="@drawable/favorite_border_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/favorite_border_24"
         app:tint="@android:color/white" />
 
     <include

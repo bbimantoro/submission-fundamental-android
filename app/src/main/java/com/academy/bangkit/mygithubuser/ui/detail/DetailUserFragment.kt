@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import com.academy.bangkit.mygithubuser.R
+import com.academy.bangkit.mygithubuser.data.Result
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
-import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.academy.bangkit.mygithubuser.ui.ViewModelFactory
 import com.academy.bangkit.mygithubuser.data.local.entity.UserEntity
 import com.academy.bangkit.mygithubuser.ui.adapter.SectionsPagerAdapter
@@ -48,34 +48,56 @@ class DetailUserFragment : Fragment() {
 
         detailViewModel.getDetailUser(username)
 
-        detailViewModel.user.observe(viewLifecycleOwner) { user ->
-            setUserData(user)
+        detailViewModel.result.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    detailUserBinding.progressbar.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    detailUserBinding.progressbar.visibility = View.GONE
 
-            with(detailUserBinding) {
-                fabFavorite.setOnClickListener {
-                    if (!btnFabState) {
-                        btnFabState = true
-                        fabFavorite.setImageResource(R.drawable.favorite_24)
+                    Glide.with(this)
+                        .load(result.data.avatarUrl)
+                        .into(detailUserBinding.ivAvatar)
 
-                        dataUser = UserEntity(
-                            user.id,
-                            user.login,
-                            user.avatarUrl
-                        )
-                        detailViewModel.insertUser(dataUser as UserEntity)
-                        showToast(getString(R.string.added))
-                    } else {
-                        btnFabState = false
-                        fabFavorite.setImageResource(R.drawable.favorite_border_24)
-                        detailViewModel.deleteUser(user.id)
-                        showToast(getString(R.string.deleted))
+                    with(detailUserBinding) {
+                        tvUsername.text = result.data.login
+                        tvName.text = result.data.name
+                        tvFollowers.text = result.data.followers.toString()
+                        tvFollowing.text = result.data.following.toString()
+
+                        fabFavorite.setOnClickListener {
+                            if (!btnFabState) {
+                                btnFabState = true
+                                fabFavorite.setImageResource(R.drawable.favorite_24)
+
+                                dataUser = UserEntity(
+                                    result.data.id,
+                                    result.data.login,
+                                    result.data.avatarUrl
+                                )
+                                detailViewModel.insertUser(dataUser as UserEntity)
+                                showToast(getString(R.string.added))
+                            } else {
+                                btnFabState = false
+                                fabFavorite.setImageResource(R.drawable.favorite_border_24)
+                                detailViewModel.deleteUser(result.data.id)
+                                showToast(getString(R.string.deleted))
+                            }
+                        }
                     }
                 }
+                else -> {}
             }
         }
 
-        detailViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
+        detailViewModel.retrieveUser(username).observe(viewLifecycleOwner) { users ->
+            btnFabState = users.isNotEmpty()
+            if (btnFabState) {
+                detailUserBinding.fabFavorite.setImageResource(R.drawable.favorite_24)
+            } else {
+                detailUserBinding.fabFavorite.setImageResource(R.drawable.favorite_border_24)
+            }
         }
     }
 
@@ -92,26 +114,8 @@ class DetailUserFragment : Fragment() {
         }.attach()
     }
 
-    private fun setUserData(data: User) {
-
-        Glide.with(this)
-            .load(data.avatarUrl)
-            .into(detailUserBinding.ivAvatar)
-
-        detailUserBinding.apply {
-            tvUsername.text = data.name
-            tvName.text = data.name
-            tvFollowers.text = data.followers.toString()
-            tvFollowing.text = data.following.toString()
-        }
-    }
-
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        detailUserBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {

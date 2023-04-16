@@ -77,6 +77,10 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.action_home_dest_to_favoriteUserFragment)
                 true
             }
+            R.id.theme -> {
+                findNavController().navigate(R.id.action_home_dest_to_themeActivity)
+                true
+            }
             else -> true
         }
     }
@@ -89,8 +93,6 @@ class HomeFragment : Fragment() {
         } else {
             homeBinding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
         }
-
-
 
         adapter = UserAdapter(listUser)
         homeBinding.rvUser.adapter = adapter

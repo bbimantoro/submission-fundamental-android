@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_home_dest_to_favoriteUserFragment"
             app:destination="@id/favoriteUserFragment" />
+        <action
+            android:id="@+id/action_home_dest_to_themeActivity"
+            app:destination="@id/themeActivity" />
     </fragment>
     <fragment
         android:id="@+id/detail_user_dest"
@@ -34,5 +37,14 @@
         android:id="@+id/favoriteUserFragment"
         android:name="com.academy.bangkit.mygithubuser.ui.favorite.FavoriteUserFragment"
         android:label="@string/label_favorite_user"
-        tools:layout="@layout/fragment_favorite_user" />
+        tools:layout="@layout/fragment_favorite_user">
+        <action
+            android:id="@+id/action_favoriteUserFragment_to_detail_user_dest"
+            app:destination="@id/detail_user_dest" />
+    </fragment>
+    <activity
+        android:id="@+id/themeActivity"
+        android:name="com.academy.bangkit.mygithubuser.ui.theme.ThemeActivity"
+        android:label="@string/label_theme"
+        tools:layout="@layout/activity_theme" />
 </navigation>

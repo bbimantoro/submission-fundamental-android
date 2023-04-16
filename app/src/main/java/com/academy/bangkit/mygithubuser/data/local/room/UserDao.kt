@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
-    @Query("SELECT * from users WHERE id = :id")
-    fun getUser(id: Int): Flow<UserEntity>
+    @Query("SELECT * from users WHERE username = :username")
+    fun getUser(username: String): Flow<List<UserEntity>>
 
     @Query("SELECT * from users ORDER BY username ASC")
     fun getUsers(): Flow<List<UserEntity>>

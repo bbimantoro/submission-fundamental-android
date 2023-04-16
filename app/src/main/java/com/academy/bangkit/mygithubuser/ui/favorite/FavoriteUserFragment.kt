@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.academy.bangkit.mygithubuser.databinding.FragmentFavoriteUserBinding
 import com.academy.bangkit.mygithubuser.ui.ViewModelFactory
 import com.academy.bangkit.mygithubuser.ui.adapter.UserAdapter
+import com.academy.bangkit.mygithubuser.ui.home.HomeFragmentDirections
 
 
 class FavoriteUserFragment : Fragment() {
+
+    private lateinit var adapter: UserAdapter
 
     private var _favoriteUserBinding: FragmentFavoriteUserBinding? = null
     private val favoriteUserBinding get() = _favoriteUserBinding!!
@@ -45,7 +49,20 @@ class FavoriteUserFragment : Fragment() {
                 val item = User(id = it.id, login = it.username, avatarUrl = it.avatarUrl)
                 items.add(item)
             }
-            favoriteUserBinding.rvUser.adapter = UserAdapter(items)
+            adapter = UserAdapter(items)
+            favoriteUserBinding.rvUser.adapter = adapter
+
+            adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+                override fun onItemClicked(data: User) {
+                    data.login?.let {
+                        val toDetailUserFragment =
+                            FavoriteUserFragmentDirections.actionFavoriteUserFragmentToDetailUserDest(
+                                it
+                            )
+                        findNavController().navigate(toDetailUserFragment)
+                    }
+                }
+            })
         }
     }
 
