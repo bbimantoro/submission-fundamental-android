@@ -3,7 +3,7 @@ package com.academy.bangkit.mygithubuser.helper
 import androidx.recyclerview.widget.DiffUtil
 import com.academy.bangkit.mygithubuser.data.network.response.User
 
-class GithubUserDiffCallback(
+class UserDiffCallback(
     private val oldUserList: List<User>,
     private val newUserList: List<User>,
 ) : DiffUtil.Callback() {

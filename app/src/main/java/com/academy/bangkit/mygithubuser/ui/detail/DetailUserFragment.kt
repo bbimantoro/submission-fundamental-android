@@ -5,18 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.FragmentDetailUserBinding
 import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.academy.bangkit.mygithubuser.ui.ViewModelFactory
-import com.academy.bangkit.mygithubuser.data.Result
+import com.academy.bangkit.mygithubuser.data.local.entity.UserEntity
 import com.academy.bangkit.mygithubuser.ui.adapter.SectionsPagerAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailUserFragment : Fragment() {
+
+    private var dataUser: UserEntity? = null
+    private var btnFabState = false
 
     private var _detailUserBinding: FragmentDetailUserBinding? = null
     private val detailUserBinding get() = _detailUserBinding!!
@@ -44,10 +48,35 @@ class DetailUserFragment : Fragment() {
 
         detailViewModel.getDetailUser(username)
 
-        detailViewModel.result.observe(viewLifecycleOwner) { result ->
-            setUserData(result)
+        detailViewModel.user.observe(viewLifecycleOwner) { user ->
+            setUserData(user)
+
+            with(detailUserBinding) {
+                fabFavorite.setOnClickListener {
+                    if (!btnFabState) {
+                        btnFabState = true
+                        fabFavorite.setImageResource(R.drawable.favorite_24)
+
+                        dataUser = UserEntity(
+                            user.id,
+                            user.login,
+                            user.avatarUrl
+                        )
+                        detailViewModel.insertUser(dataUser as UserEntity)
+                        showToast(getString(R.string.added))
+                    } else {
+                        btnFabState = false
+                        fabFavorite.setImageResource(R.drawable.favorite_border_24)
+                        detailViewModel.deleteUser(user.id)
+                        showToast(getString(R.string.deleted))
+                    }
+                }
+            }
         }
 
+        detailViewModel.isLoading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
     }
 
     private fun setTabLayoutView() {
@@ -63,27 +92,26 @@ class DetailUserFragment : Fragment() {
         }.attach()
     }
 
-    private fun setUserData(result: Result<User>) {
-        when (result) {
-            is Result.Loading -> {
-                detailUserBinding.progressbar.visibility = View.VISIBLE
-            }
-            is Result.Success -> {
-                detailUserBinding.progressbar.visibility = View.GONE
+    private fun setUserData(data: User) {
 
-                Glide.with(this)
-                    .load(result.data.avatarUrl)
-                    .into(detailUserBinding.ivAvatar)
+        Glide.with(this)
+            .load(data.avatarUrl)
+            .into(detailUserBinding.ivAvatar)
 
-                detailUserBinding.apply {
-                    tvUsername.text = result.data.name
-                    tvName.text = result.data.name
-                    tvFollowers.text = result.data.followers.toString()
-                    tvFollowing.text = result.data.following.toString()
-                }
-            }
-            else -> {}
+        detailUserBinding.apply {
+            tvUsername.text = data.name
+            tvName.text = data.name
+            tvFollowers.text = data.followers.toString()
+            tvFollowing.text = data.following.toString()
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        detailUserBinding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroy() {

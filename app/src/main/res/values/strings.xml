@@ -7,8 +7,12 @@
     <string name="theme">Theme</string>
     <string name="setting">Setting</string>
     <string name="favorite">Favorite</string>
-    <string name="add_new_favorite_user">Add New Favorite User</string>
+    <string name="add_to_favorite">Add To Favorite</string>
+
     <string name="connection_error">Connection Error</string>
+
+    <string name="added">Successfully added to Favorite</string>
+    <string name="deleted">Successfully deleted from Favorite</string>
 
     <string name="dark_mode">Dark Mode</string>
 
@@ -16,6 +20,7 @@
 
     <string name="label_home">Home</string>
     <string name="label_detail_user">Detail User</string>
+    <string name="label_favorite_user">Favorite User</string>
     <string name="label_theme">Set Theme</string>
 
     <string name="tab_text_1">Followers</string>
@@ -25,20 +30,4 @@
     <string name="following">Following</string>
 
     <string name="tabs">tabs</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

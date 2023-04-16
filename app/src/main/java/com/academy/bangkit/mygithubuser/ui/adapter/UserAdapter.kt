@@ -7,14 +7,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.ItemUserBinding
-import com.academy.bangkit.mygithubuser.helper.GithubUserDiffCallback
+import com.academy.bangkit.mygithubuser.helper.UserDiffCallback
 import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.bumptech.glide.Glide
 
-class UserAdapter(private val onClickItemUser: (User) -> Unit) :
+class UserAdapter(private val listUser: ArrayList<User>) :
     RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
 
-    private val listUser = ArrayList<User>()
+    private lateinit var onItemClickCallback: OnItemClickCallback
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ListViewHolder(
         ItemUserBinding.inflate(
@@ -39,7 +42,7 @@ class UserAdapter(private val onClickItemUser: (User) -> Unit) :
                 tvUsername.text = data.login
             }
             itemView.setOnClickListener {
-                onClickItemUser(data)
+                onItemClickCallback.onItemClicked(data)
             }
         }
     }
@@ -52,11 +55,15 @@ class UserAdapter(private val onClickItemUser: (User) -> Unit) :
             .into(this)
     }
 
+    interface OnItemClickCallback {
+        fun onItemClicked(data: User)
+    }
+
     fun setListUser(newListUser: List<User>) {
-        val diffCallback = GithubUserDiffCallback(this.listUser, newListUser)
+        val diffCallback = UserDiffCallback(listUser, newListUser)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.listUser.clear()
-        this.listUser.addAll(newListUser)
+        listUser.clear()
+        listUser.addAll(newListUser)
         diffResult.dispatchUpdatesTo(this)
     }
 }

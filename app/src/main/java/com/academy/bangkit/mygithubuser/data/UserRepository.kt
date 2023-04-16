@@ -18,8 +18,8 @@ class UserRepository private constructor(
         userDao.insert(user)
     }
 
-    suspend fun deleteUser(user: UserEntity) {
-        userDao.delete(user)
+    suspend fun deleteUser(id: Int) {
+        userDao.delete(id)
     }
 
     companion object {

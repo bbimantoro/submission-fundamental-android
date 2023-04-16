@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.academy.bangkit.mygithubuser.R
 import com.academy.bangkit.mygithubuser.databinding.ItemMutualUserBinding
-import com.academy.bangkit.mygithubuser.helper.GithubUserDiffCallback
+import com.academy.bangkit.mygithubuser.helper.UserDiffCallback
 import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.bumptech.glide.Glide
 
@@ -45,7 +45,7 @@ class MutualAdapter : RecyclerView.Adapter<MutualAdapter.ViewHolder>() {
     }
 
     fun setListUser(newListUser: List<User>) {
-        val diffCallback = GithubUserDiffCallback(this.listUser, newListUser)
+        val diffCallback = UserDiffCallback(this.listUser, newListUser)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.listUser.clear()
         this.listUser.addAll(newListUser)

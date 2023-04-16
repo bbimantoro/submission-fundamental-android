@@ -33,6 +33,6 @@
     <fragment
         android:id="@+id/favoriteUserFragment"
         android:name="com.academy.bangkit.mygithubuser.ui.favorite.FavoriteUserFragment"
-        android:label="fragment_favorite_user"
+        android:label="@string/label_favorite_user"
         tools:layout="@layout/fragment_favorite_user" />
 </navigation>

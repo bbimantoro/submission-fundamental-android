@@ -9,8 +9,7 @@ data class UserEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
 
-    @ColumnInfo("username")
-    var username: String,
+    var username: String? = null,
 
     @ColumnInfo("avatar_url")
     var avatarUrl: String? = null

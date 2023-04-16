@@ -22,6 +22,7 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     private lateinit var adapter: UserAdapter
+    private val listUser = ArrayList<User>()
 
     private var _homeBinding: FragmentHomeBinding? = null
     private val homeBinding get() = _homeBinding!!
@@ -89,14 +90,22 @@ class HomeFragment : Fragment() {
             homeBinding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
         }
 
-        adapter = UserAdapter { user ->
-            user.login?.let {
-                val toDetailUserFragment =
-                    HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(it)
-                findNavController().navigate(toDetailUserFragment)
-            }
-        }
+
+
+        adapter = UserAdapter(listUser)
         homeBinding.rvUser.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: User) {
+                data.login?.let {
+                    val toDetailUserFragment =
+                        HomeFragmentDirections.actionHomeFragmentToDetailUserFragment(it)
+                    findNavController().navigate(toDetailUserFragment)
+                }
+            }
+        })
+
+
     }
 
     private fun setUserData(result: Result<List<User>>) {
