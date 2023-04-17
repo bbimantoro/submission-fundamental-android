@@ -3,6 +3,7 @@ package com.academy.bangkit.mygithubuser
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -17,6 +18,7 @@ import com.academy.bangkit.mygithubuser.ui.SettingViewModelFactory
 import com.academy.bangkit.mygithubuser.ui.theme.ThemeViewModel
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
@@ -28,7 +30,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainBinding.root)
 
         val pref = SettingPreferences.getInstance(dataStore)
-        ViewModelProvider(this, SettingViewModelFactory(pref))[ThemeViewModel::class.java]
+        val themeViewModel =
+            ViewModelProvider(this, SettingViewModelFactory(pref))[ThemeViewModel::class.java]
+
+        themeViewModel.getThemeSettings().observe(this) { isDarkModeActive ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
 
         val navHostFragment =
