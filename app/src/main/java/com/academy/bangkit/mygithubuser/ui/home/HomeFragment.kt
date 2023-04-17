@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
                 true
             }
             R.id.theme -> {
-                findNavController().navigate(R.id.action_home_dest_to_themeActivity)
+                findNavController().navigate(R.id.action_home_dest_to_themeFragment)
                 true
             }
             else -> true

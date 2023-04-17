@@ -2,7 +2,6 @@ package com.academy.bangkit.mygithubuser.data.network.retrofit
 
 import com.academy.bangkit.mygithubuser.data.network.response.User
 import com.academy.bangkit.mygithubuser.data.network.response.UserResponse
-import retrofit2.Call
 import retrofit2.http.*
 
 interface GithubApiService {
